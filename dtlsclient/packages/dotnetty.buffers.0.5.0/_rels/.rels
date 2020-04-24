@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Type="http://schemas.microsoft.com/packaging/2010/07/manifest" Target="/DotNetty.Buffers.nuspec" Id="Rb853996d4e91415b" />
+  <Relationship Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="/package/services/metadata/core-properties/fe582bc3a56a484b9809e5c4a2f666bb.psmdcp" Id="R6994c8e3553d4f8b" />
+</Relationships>

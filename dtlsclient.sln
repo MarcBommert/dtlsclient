@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dtlsclient", "dtlsclient\dtlsclient.csproj", "{8275FA76-42B6-46DF-88E2-C63CCE455546}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8275FA76-42B6-46DF-88E2-C63CCE455546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8275FA76-42B6-46DF-88E2-C63CCE455546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8275FA76-42B6-46DF-88E2-C63CCE455546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8275FA76-42B6-46DF-88E2-C63CCE455546}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FA283BE0-8EA9-429F-8172-7C5ED1B44D84}
+	EndGlobalSection
+EndGlobal

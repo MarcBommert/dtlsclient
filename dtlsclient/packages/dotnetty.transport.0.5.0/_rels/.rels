@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Type="http://schemas.microsoft.com/packaging/2010/07/manifest" Target="/DotNetty.Transport.nuspec" Id="Rf9a4bb5a90d0418d" />
+  <Relationship Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="/package/services/metadata/core-properties/f88f369ef03c449cb06e453124ec2168.psmdcp" Id="R3c68d6db5b204fe0" />
+</Relationships>
