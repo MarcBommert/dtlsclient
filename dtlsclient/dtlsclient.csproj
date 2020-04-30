@@ -33,48 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Buffers, Version=0.5.0.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\dotnetty.buffers.0.5.0\lib\net45\DotNetty.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Codecs, Version=0.5.0.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\dotnetty.codecs.0.5.0\lib\net45\DotNetty.Codecs.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Common, Version=0.5.0.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\dotnetty.common.0.5.0\lib\net45\DotNetty.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Transport, Version=0.5.0.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\dotnetty.transport.0.5.0\lib\net45\DotNetty.Transport.dll</HintPath>
-    </Reference>
     <Reference Include="LibEtherNetIP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\LibEtherNetIP.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\Microsoft.Extensions.Logging.1.1.2\lib\netstandard1.1\Microsoft.Extensions.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.1.1.2\lib\netstandard1.1\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <HintPath>..\packages\LibEtherNetIP.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -87,37 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CLIENT\CertificatesHelper.cs" />
-    <Compile Include="CLIENT\ConnectionListener.cs" />
-    <Compile Include="CLIENT\DtlsClientHandler.cs" />
-    <Compile Include="CLIENT\NetworkChannel.cs" />
-    <Compile Include="CLIENT\PasswordFinder.cs" />
-    <Compile Include="CLIENT\RawMessageHandler.cs" />
-    <Compile Include="CLIENT\UDPClient.cs" />
-    <Compile Include="DTLS\ArrayUtils.cs" />
-    <Compile Include="DTLS\AsyncCertificateRequest.cs" />
-    <Compile Include="DTLS\AsyncDtlsClient.cs" />
-    <Compile Include="DTLS\AsyncDtlsClientAuthentication.cs" />
-    <Compile Include="DTLS\AsyncDtlsClientContext.cs" />
-    <Compile Include="DTLS\AsyncDtlsClientProtocol.cs" />
-    <Compile Include="DTLS\AsyncDtlsClientState.cs" />
-    <Compile Include="DTLS\AsyncDtlsEpoch.cs" />
-    <Compile Include="DTLS\AsyncDtlsRecordLayer.cs" />
-    <Compile Include="DTLS\AsyncDtlsReplayWindow.cs" />
-    <Compile Include="DTLS\AsyncDtlsSecurityParameters.cs" />
-    <Compile Include="DTLS\AsyncDtlsSessionImpl.cs" />
-    <Compile Include="DTLS\AsyncTlsDHEKeyExchange.cs" />
-    <Compile Include="DTLS\AsyncTlsECDHEKeyExchange.cs" />
-    <Compile Include="DTLS\CertificateData.cs" />
-    <Compile Include="DTLS\CombinedHash.cs" />
-    <Compile Include="DTLS\DeferredHash.cs" />
-    <Compile Include="DTLS\DigestInputBuffer.cs" />
-    <Compile Include="DTLS\DtlsHelper.cs" />
-    <Compile Include="DTLS\DtlsStateHandler.cs" />
-    <Compile Include="DTLS\HandshakeHandler.cs" />
-    <Compile Include="DTLS\HandshakeHeader.cs" />
-    <Compile Include="DTLS\MessageType.cs" />
-    <Compile Include="DTLS\PendingMessageData.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +83,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibDtlsClient\LibDtlsClient.csproj">
+      <Project>{8e27b6cc-7605-48f5-ad7d-853fd349efd6}</Project>
+      <Name>LibDtlsClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
