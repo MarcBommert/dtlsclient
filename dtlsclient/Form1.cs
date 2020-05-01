@@ -11,8 +11,6 @@ using System.Windows.Forms;
 using com.mobius.software.windows.iotbroker.coap.net;
 using com.mobius.software.windows.iotbroker.network;
 
-using LibEtherNetIP;
-
 namespace dtlsclient
 {
   public partial class Form1 : Form, ConnectionListener<string>
@@ -74,9 +72,23 @@ namespace dtlsclient
       checkBox1.Checked = false;
     }
 
+    public string MessageToHumanReadableString(string msg)
+    {
+      string ret = "";
+      int i = 0;
+      foreach (char c in msg)
+      {
+        ret += ((int)c).ToString("X2") + " ";
+        i++;
+        if ((i > 0) && (i % 16 == 0))
+          ret += System.Environment.NewLine;
+      }
+      return ret;
+    }
+
     public void AddListBoxEntryMethod(string message)
     {
-      listBox1.Items.Add(Helpers.MessageToHumanReadableString(message));
+      listBox1.Items.Add(MessageToHumanReadableString(message));
     }
 
     public void ConnectionLost()
@@ -94,6 +106,50 @@ namespace dtlsclient
       this.Invoke(mySetUncheckedDelegate);
     }
 
+
+    /// <summary>
+    /// Test for all valid hex char [0-9, a-f, A-F]
+    /// </summary>
+    /// <param name="c">Character to test</param>
+    /// <returns>true if valid hex char, false otherwise</returns>
+    public bool IsValidHexChar(char c)
+    {
+      if (Char.IsDigit(c))
+        return true;
+      c = Char.ToLower(c);
+      if ((c == 'a') || (c == 'b') || (c == 'c') || (c == 'd') || (c == 'e') || (c == 'f'))
+        return true;
+      return false;
+    }
+
+    /// <summary>
+    /// Test for all valid hex chars in given string [0-9, a-f, A-F]
+    /// </summary>
+    /// <param name="s">String to test</param>
+    /// <returns>true if all valid hex chars in string, false otherwise</returns>
+    public bool IsValidHexString(string s)
+    {
+      foreach (char c in s)
+        if (!IsValidHexChar(c))
+          return false;
+      return true;
+    }
+    public string byteArrayToString(byte[] source)
+    {
+      string ret = null;
+      if (source != null)
+        foreach (byte b in source)
+          ret += (char)b;
+      return ret;
+    }
+
+    public string pack_usint(byte val)
+    {
+      byte[] barray = new byte[1];
+      barray[0] = val;
+      return byteArrayToString(barray);
+    }
+
     private void button2_Click(object sender, EventArgs e)
     {
 
@@ -108,7 +164,7 @@ namespace dtlsclient
         textBox3.BackColor = Color.Red;
         label4.Text = "Odd number of characters given.";
       }
-      else if (!Helpers.IsValidHexString(sSendUserData))
+      else if (!IsValidHexString(sSendUserData))
       {
         textBox3.BackColor = Color.Red;
         label4.Text = "Invalid characters given";
@@ -127,7 +183,7 @@ namespace dtlsclient
 
         string sDat = String.Empty;
         for (int i = 0; i < numBytes; i++)
-          sDat += Serialize.pack("=B", sendIoData[i]);  // data
+          sDat += pack_usint(sendIoData[i]);  // data
 
         udp_client.Send(sDat);
       }
