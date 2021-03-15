@@ -100,13 +100,20 @@ namespace com.mobius.software.windows.iotbroker.coap.net
 
     public Boolean Init(ConnectionListener<string> listener)
     {
+      return Init(listener, null);
+    }
+
+    public Boolean Init(ConnectionListener<string> listener, IPEndPoint localEndPoint)
+    {
       if (channel == null)
       {
         this._listener = listener;
         bootstrap = new Bootstrap();
         loopGroup = new MultithreadEventLoopGroup(workerThreads);
         bootstrap.Group(loopGroup);
+
         bootstrap.Channel<SocketDatagramChannel>();
+
         UDPClient currClient = this;
         bootstrap.Handler(new ActionChannelInitializer<SocketDatagramChannel>(channel =>
         {
@@ -136,7 +143,15 @@ namespace com.mobius.software.windows.iotbroker.coap.net
 
         try
         {
-          Task<IChannel> task = bootstrap.BindAsync(IPEndPoint.MinPort);
+          Task<IChannel> task;
+          if (localEndPoint != null)
+          {
+             task = bootstrap.BindAsync(localEndPoint);
+          }
+          else
+          {
+            task = bootstrap.BindAsync(IPEndPoint.MinPort);
+          }
 
           task.GetAwaiter().OnCompleted(() =>
           {
