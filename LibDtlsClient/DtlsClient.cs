@@ -17,17 +17,28 @@ namespace LibDtlsClient
     public DataReceivedCallback pFnReceive;
     public ConnectedCallback pFnConnect;
     public bool fHasConnected = false;
+    System.Net.IPEndPoint localEndPoint;
 
     public DtlsClient(DataReceivedCallback data_cb, ConnectedCallback connect_cb)
     {
       pFnReceive = data_cb;
       pFnConnect = connect_cb;
+
+      this.localEndPoint = null;
+    }
+
+    public DtlsClient(DataReceivedCallback data_cb, ConnectedCallback connect_cb, System.Net.IPEndPoint localEndPoint)
+    {
+      pFnReceive = data_cb;
+      pFnConnect = connect_cb;
+      this.localEndPoint = localEndPoint;
     }
 
     public bool Connect(string ipaddr, UInt16 usPort)
     {
       udp_client = new UDPClient(new System.Net.DnsEndPoint(ipaddr, usPort), true, null, String.Empty, 1, 10);
-      udp_client.Init(this);
+      udp_client.Init(this, localEndPoint);
+
 #if false
       /* Wait for connection or timeout */
       int timeouts = 0;
