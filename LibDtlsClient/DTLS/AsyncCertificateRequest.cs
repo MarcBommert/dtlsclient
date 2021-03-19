@@ -136,10 +136,9 @@ namespace com.mobius.software.windows.iotbroker.network.dtls
         asn1.Close();
 
         if (null == result)
+        { 
           throw new TlsFatalAlert(AlertDescription.decode_error);
-
-        if (null != asn1.ReadObject())
-          throw new TlsFatalAlert(AlertDescription.decode_error);
+        }
 
         certificateAuthorities.Add(X509Name.GetInstance(result));
         remainingBytes -= 2 + derEncoding.Length;
