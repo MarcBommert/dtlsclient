@@ -52,8 +52,8 @@ namespace dtlsclient
         return;
       }
 
-      udp_client = new UDPClient(new System.Net.DnsEndPoint(ip.ToString(), usPort), true, null, String.Empty, 1, 10);
-      udp_client.Init(this, null);
+      udp_client = new UDPClient(new System.Net.DnsEndPoint(ip.ToString(), usPort), true, 1, 10);
+      udp_client.Init(this);
     }
 
     public void PacketReceived(string message)

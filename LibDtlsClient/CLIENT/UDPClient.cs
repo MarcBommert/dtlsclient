@@ -39,6 +39,81 @@ using System.Timers;
 
 namespace com.mobius.software.windows.iotbroker.coap.net
 {
+
+  class MyAsyncDtlsClientAuthentication : TlsAuthentication
+  {
+    private TlsContext context;
+    X509CertificateEntry[] clientCertChain = null;
+    AsymmetricKeyEntry clientPrivateKey = null;
+
+    public MyAsyncDtlsClientAuthentication(TlsContext context, X509CertificateEntry[] clientCertChain, AsymmetricKeyEntry clientPrivateKey)
+    {
+      this.context = context;
+      this.clientCertChain = clientCertChain;
+      this.clientPrivateKey = clientPrivateKey;
+    }
+
+    public TlsCredentials GetClientCredentials(CertificateRequest certificateRequest)
+    {
+      Org.BouncyCastle.Asn1.X509.X509CertificateStructure[] certs = new Org.BouncyCastle.Asn1.X509.X509CertificateStructure[clientCertChain.Length];
+      for (int i = 0; i < clientCertChain.Length; i++)
+      {
+        X509CertificateEntry entry = clientCertChain[i];
+        certs[i] = entry.Certificate.CertificateStructure;
+      }
+
+      /* for all signature and hsah algorithm tuples the server supports ... */
+      foreach (SignatureAndHashAlgorithm sh in certificateRequest.SupportedSignatureAlgorithms)
+      {
+        if (sh.Signature == SignatureAlgorithm.ecdsa)     /* here, we assume the certificate is signed with ecdsa */
+        {
+          TlsSignerCredentials creds = new DefaultTlsSignerCredentials(context, new Certificate(certs), clientPrivateKey.Key, sh);
+          return creds;
+        }
+      }
+      return null;
+    }
+
+    public void NotifyServerCertificate(Certificate serverCertificate)
+    {
+    }
+  }
+
+
+  public class MyAsyncDtlsClient: AsyncDtlsClient
+  {
+
+    X509CertificateEntry[] clientCertChain = null;
+    AsymmetricKeyEntry clientPrivateKey = null;
+
+    public MyAsyncDtlsClient(string certFile, string certPassword, bool fLoadWholeChain) : base(null, String.Empty, null)
+    {
+      System.IO.FileStream fs = new System.IO.FileStream(certFile, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read);
+      Pkcs12Store pkcs12Store = new Pkcs12Store(fs, certPassword.ToCharArray());
+
+      string alias = pkcs12Store.Aliases.Cast<string>().FirstOrDefault(al => pkcs12Store.IsKeyEntry(al) && pkcs12Store.GetKey(al).Key.IsPrivate);
+
+      fs.Close();
+
+      if (fLoadWholeChain)
+      {
+        clientCertChain = pkcs12Store.GetCertificateChain(alias);
+      }
+      else
+      {
+        clientCertChain = new X509CertificateEntry[1];
+        clientCertChain[0] = pkcs12Store.GetCertificate(alias);
+      }
+
+      clientPrivateKey = pkcs12Store.GetKey(alias);
+    }
+
+    override public TlsAuthentication GetAuthentication()
+    {
+      return new MyAsyncDtlsClientAuthentication(this.mContext, clientCertChain, clientPrivateKey);
+    }
+  }
+
   public class UDPClient : NetworkChannel<string>, DtlsStateHandler
   {
     private DnsEndPoint address;
@@ -62,13 +137,13 @@ namespace com.mobius.software.windows.iotbroker.coap.net
     private Int32 connectPeriod;
 
     // handlers for client connections
-    public UDPClient(DnsEndPoint address, Boolean isSecured, String certificate, String certificatePassword, Int32 workerThreads, Int32 connectPeriod)
+    public UDPClient(DnsEndPoint address, Boolean isSecured, Int32 workerThreads, Int32 connectPeriod)
     {
       this.address = address;
       this.workerThreads = workerThreads;
       this.isSecured = isSecured;
-      this.certificate = certificate;
-      this.certificatePassword = certificatePassword;
+      this.certificate = null;
+      this.certificatePassword = String.Empty;
       this.connectPeriod = connectPeriod;
     }
 
@@ -100,10 +175,10 @@ namespace com.mobius.software.windows.iotbroker.coap.net
 
     public Boolean Init(ConnectionListener<string> listener)
     {
-      return Init(listener, null);
+      return Init(listener, null, null, null, false);
     }
 
-    public Boolean Init(ConnectionListener<string> listener, IPEndPoint localEndPoint)
+    public Boolean Init(ConnectionListener<string> listener, IPEndPoint localEndPoint, string certFile, string certPassword, bool fLoadWholeChain)
     {
       if (channel == null)
       {
@@ -124,7 +199,7 @@ namespace com.mobius.software.windows.iotbroker.coap.net
             if (certificate != null && certificate.Length > 0)
               keystore = CertificatesHelper.loadBC(certificate, certificatePassword);
 
-            AsyncDtlsClient client = new AsyncDtlsClient(keystore, certificatePassword, null);
+            AsyncDtlsClient client = new MyAsyncDtlsClient(certFile, certPassword, fLoadWholeChain);
             _clientProtocol = new AsyncDtlsClientProtocol(client, new SecureRandom(), channel, currClient, true, ProtocolVersion.DTLSv12);
             pipeline.AddLast(new DtlsClientHandler(_clientProtocol, this));
           }

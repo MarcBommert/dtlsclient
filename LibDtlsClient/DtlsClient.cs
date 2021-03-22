@@ -3,6 +3,7 @@
 
 using com.mobius.software.windows.iotbroker.coap.net;
 using com.mobius.software.windows.iotbroker.network;
+using Org.BouncyCastle.Crypto.Tls;
 
 
 namespace LibDtlsClient
@@ -36,8 +37,13 @@ namespace LibDtlsClient
 
     public bool Connect(string ipaddr, UInt16 usPort)
     {
-      udp_client = new UDPClient(new System.Net.DnsEndPoint(ipaddr, usPort), true, null, String.Empty, 1, 10);
-      udp_client.Init(this, localEndPoint);
+      return Connect(ipaddr, usPort, null, null, false);
+    }
+
+    public bool Connect(string ipaddr, UInt16 usPort, string certFile, string certPassword, bool fLoadWholeChain)
+    {
+      udp_client = new UDPClient(new System.Net.DnsEndPoint(ipaddr, usPort), true, 1, 10);
+      udp_client.Init(this, localEndPoint, certFile, certPassword, fLoadWholeChain);
 
 #if false
       /* Wait for connection or timeout */
