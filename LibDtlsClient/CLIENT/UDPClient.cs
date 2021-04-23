@@ -55,20 +55,23 @@ namespace com.mobius.software.windows.iotbroker.coap.net
 
     public TlsCredentials GetClientCredentials(CertificateRequest certificateRequest)
     {
-      Org.BouncyCastle.Asn1.X509.X509CertificateStructure[] certs = new Org.BouncyCastle.Asn1.X509.X509CertificateStructure[clientCertChain.Length];
-      for (int i = 0; i < clientCertChain.Length; i++)
+      if (clientCertChain != null)
       {
-        X509CertificateEntry entry = clientCertChain[i];
-        certs[i] = entry.Certificate.CertificateStructure;
-      }
-
-      /* for all signature and hsah algorithm tuples the server supports ... */
-      foreach (SignatureAndHashAlgorithm sh in certificateRequest.SupportedSignatureAlgorithms)
-      {
-        if (sh.Signature == SignatureAlgorithm.ecdsa)     /* here, we assume the certificate is signed with ecdsa */
+        Org.BouncyCastle.Asn1.X509.X509CertificateStructure[] certs = new Org.BouncyCastle.Asn1.X509.X509CertificateStructure[clientCertChain.Length];
+        for (int i = 0; i < clientCertChain.Length; i++)
         {
-          TlsSignerCredentials creds = new DefaultTlsSignerCredentials(context, new Certificate(certs), clientPrivateKey.Key, sh);
-          return creds;
+          X509CertificateEntry entry = clientCertChain[i];
+          certs[i] = entry.Certificate.CertificateStructure;
+        }
+
+        /* for all signature and hsah algorithm tuples the server supports ... */
+        foreach (SignatureAndHashAlgorithm sh in certificateRequest.SupportedSignatureAlgorithms)
+        {
+          if (sh.Signature == SignatureAlgorithm.ecdsa)     /* here, we assume the certificate is signed with ecdsa */
+          {
+            TlsSignerCredentials creds = new DefaultTlsSignerCredentials(context, new Certificate(certs), clientPrivateKey.Key, sh);
+            return creds;
+          }
         }
       }
       return null;
@@ -88,24 +91,27 @@ namespace com.mobius.software.windows.iotbroker.coap.net
 
     public MyAsyncDtlsClient(string certFile, string certPassword, bool fLoadWholeChain) : base(null, String.Empty, null)
     {
-      System.IO.FileStream fs = new System.IO.FileStream(certFile, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read);
-      Pkcs12Store pkcs12Store = new Pkcs12Store(fs, certPassword.ToCharArray());
-
-      string alias = pkcs12Store.Aliases.Cast<string>().FirstOrDefault(al => pkcs12Store.IsKeyEntry(al) && pkcs12Store.GetKey(al).Key.IsPrivate);
-
-      fs.Close();
-
-      if (fLoadWholeChain)
+      if (certFile != String.Empty)
       {
-        clientCertChain = pkcs12Store.GetCertificateChain(alias);
-      }
-      else
-      {
-        clientCertChain = new X509CertificateEntry[1];
-        clientCertChain[0] = pkcs12Store.GetCertificate(alias);
-      }
+        System.IO.FileStream fs = new System.IO.FileStream(certFile, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read);
+        Pkcs12Store pkcs12Store = new Pkcs12Store(fs, certPassword.ToCharArray());
 
-      clientPrivateKey = pkcs12Store.GetKey(alias);
+        string alias = pkcs12Store.Aliases.Cast<string>().FirstOrDefault(al => pkcs12Store.IsKeyEntry(al) && pkcs12Store.GetKey(al).Key.IsPrivate);
+
+        fs.Close();
+
+        if (fLoadWholeChain)
+        {
+          clientCertChain = pkcs12Store.GetCertificateChain(alias);
+        }
+        else
+        {
+          clientCertChain = new X509CertificateEntry[1];
+          clientCertChain[0] = pkcs12Store.GetCertificate(alias);
+        }
+
+        clientPrivateKey = pkcs12Store.GetKey(alias);
+      }
     }
 
     override public TlsAuthentication GetAuthentication()
