@@ -83,6 +83,11 @@ namespace com.mobius.software.windows.iotbroker.network.dtls
       return this.serverCertificate;
     }
 
+    public void Close()
+    {
+      recordLayer.Close();
+    }
+
     public void SendAlert(byte alertLevel, byte alertDescription, String message, Exception cause)
     {
       recordLayer.SendAlert(alertLevel, alertDescription, message, cause);
