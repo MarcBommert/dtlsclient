@@ -167,6 +167,8 @@ namespace com.mobius.software.windows.iotbroker.coap.net
 
     public void Close()
     {
+      _clientProtocol.Close();
+
       if (channel != null)
       {
         channel.CloseAsync();

@@ -61,6 +61,11 @@ namespace LibDtlsClient
       return true;
     }
 
+    public void Close()
+    {
+      udp_client.Close();
+    }
+
     public void Send(string sDat)
     {
       udp_client.Send(sDat);
